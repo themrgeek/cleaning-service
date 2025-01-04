@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"cleaning-service/pkg/config"
-	"cleaning-service/pkg/routes"
+	"github.com/themrgeek/cleaning-service/pkg/config"
+	"github.com/themrgeek/cleaning-service/pkg/routes"
 )
 
 func main() {

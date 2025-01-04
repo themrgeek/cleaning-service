@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"cleaning-service/pkg/model"
-	"cleaning-service/pkg/services"
-	"cleaning-service/pkg/utils"
 	"encoding/json"
 	"net/http"
+
+	"github.com/themrgeek/cleaning-service/pkg/model"
+	"github.com/themrgeek/cleaning-service/pkg/services"
+	"github.com/themrgeek/cleaning-service/pkg/utils"
 
 	"github.com/gorilla/mux"
 )
@@ -75,4 +76,64 @@ func DeleteAppointment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.RespondWithJSON(w, http.StatusOK, map[string]string{"message": "Appointment deleted successfully"})
+}
+
+// UpdateStatus updates the status of a cleaner
+
+func UpdateStatus(w http.ResponseWriter, r *http.Request) {
+
+	// Implementation of the function
+
+	w.WriteHeader(http.StatusOK)
+
+	w.Write([]byte("Status updated"))
+
+}
+
+// ViewInquiries handles the GET /cleaner/inquiries request
+
+func ViewInquiries(w http.ResponseWriter, r *http.Request) {
+
+	// Implement the logic to view inquiries
+
+	w.WriteHeader(http.StatusOK)
+
+	w.Write([]byte("Inquiries viewed successfully"))
+
+}
+
+// CompleteInquiry handles the completion of an inquiry
+
+func CompleteInquiry(w http.ResponseWriter, r *http.Request) {
+
+	// Implement the logic to complete an inquiry
+
+	w.WriteHeader(http.StatusOK)
+
+	w.Write([]byte("Inquiry completed"))
+
+}
+
+// ViewPerformance handles the performance view request
+
+func ViewPerformance(w http.ResponseWriter, r *http.Request) {
+
+	// Implementation of the function
+
+	w.WriteHeader(http.StatusOK)
+
+	w.Write([]byte("Performance data"))
+
+}
+
+// ViewRevenue handles the request to view revenue
+
+func ViewRevenue(w http.ResponseWriter, r *http.Request) {
+
+	// Implementation for viewing revenue
+
+	w.WriteHeader(http.StatusOK)
+
+	w.Write([]byte("Revenue details"))
+
 }

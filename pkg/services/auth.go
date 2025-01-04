@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/themrgeek/cleaning-service/pkg/model"
 	"golang.org/x/crypto/bcrypt"
 )
 

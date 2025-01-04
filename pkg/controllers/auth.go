@@ -1,11 +1,12 @@
 package controllers
 
 import (
-	"cleaning-service/pkg/model"
-	"cleaning-service/pkg/services"
-	"cleaning-service/pkg/utils"
 	"encoding/json"
 	"net/http"
+
+	"github.com/themrgeek/cleaning-service/pkg/model"
+	"github.com/themrgeek/cleaning-service/pkg/services"
+	"github.com/themrgeek/cleaning-service/pkg/utils"
 )
 
 func Signup(w http.ResponseWriter, r *http.Request) {

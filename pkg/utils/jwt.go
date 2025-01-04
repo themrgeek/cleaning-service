@@ -1,12 +1,18 @@
 package utils
 
 import (
+	"context"
 	"net/http"
 	"os"
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 )
+
+type Claims struct {
+	UserID string `json:"user_id"`
+	jwt.StandardClaims
+}
 
 var jwtKey = []byte(os.Getenv("JWT_SECRET"))
 
@@ -29,8 +35,7 @@ func ValidateJWT(next http.Handler) http.Handler {
 			RespondWithError(w, http.StatusUnauthorized, "Invalid token")
 			return
 		}
-
-		context.Set(r, "userID", claims.UserID)
-		next.ServeHTTP(w, r)
+		ctx := context.WithValue(r.Context(), "userID", claims.UserID)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

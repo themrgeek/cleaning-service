@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"cleaning-service/pkg/controllers"
+	"github.com/themrgeek/cleaning-service/pkg/controllers"
 
 	"github.com/gorilla/mux"
 )
