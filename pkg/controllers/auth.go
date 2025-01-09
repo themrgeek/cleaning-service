@@ -66,4 +66,5 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.RespondWithJSON(w, http.StatusOK, map[string]string{"token": token})
+
 }

@@ -39,12 +39,6 @@ type Appointment struct {
 	Status string `json:"status"`
 }
 
-type Cleaner struct {
-	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
-}
-
 type Credentials struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
