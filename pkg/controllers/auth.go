@@ -2,6 +2,9 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
+	"io"
+	"log"
 	"net/http"
 
 	"github.com/themrgeek/cleaning-service/pkg/model"
@@ -37,14 +40,20 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithJSON(w, http.StatusCreated, map[string]string{"message": "User created successfully"})
 }
 func Login(w http.ResponseWriter, r *http.Request) {
-	var creds model.Credentials
+	// var creds model.Credentials
+	creds := model.Credentials{
+		Email:    r.URL.Query().Get("email"),
+		Password: r.URL.Query().Get("password"),
+	}
+	fmt.Printf("creds: %v", creds)
 	err := json.NewDecoder(r.Body).Decode(&creds)
-	if err != nil {
+	if err != nil && err != io.EOF {
 		utils.RespondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
 
 	user, err := model.AuthenticateUser(creds)
+	log.Println("Error", err)
 	if err != nil {
 		utils.RespondWithError(w, http.StatusUnauthorized, "Invalid credentials")
 		return

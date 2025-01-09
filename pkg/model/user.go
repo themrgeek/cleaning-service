@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"log"
 
 	"github.com/themrgeek/cleaning-service/pkg/config"
 	"golang.org/x/crypto/bcrypt"
@@ -51,6 +52,7 @@ type Credentials struct {
 
 func CreateUser(user *User) error {
 	_, err := config.DB.Exec("INSERT INTO users (name, email, password) VALUES (?, ?, ?)", user.Name, user.Email, user.Password)
+	log.Println("Error", err)
 	return err
 }
 
