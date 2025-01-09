@@ -16,6 +16,10 @@ type Claims struct {
 
 var jwtKey = []byte(os.Getenv("JWT_SECRET"))
 
+type contextKey string
+
+const userIDKey contextKey = "userID"
+
 func ValidateJWT(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
@@ -35,7 +39,8 @@ func ValidateJWT(next http.Handler) http.Handler {
 			RespondWithError(w, http.StatusUnauthorized, "Invalid token")
 			return
 		}
-		ctx := context.WithValue(r.Context(), "userID", claims.UserID)
+
+		ctx := context.WithValue(r.Context(), userIDKey, claims.UserID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

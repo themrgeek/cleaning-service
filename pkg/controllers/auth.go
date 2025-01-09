@@ -10,14 +10,17 @@ import (
 )
 
 func Signup(w http.ResponseWriter, r *http.Request) {
-	var user model.User
-	err := json.NewDecoder(r.Body).Decode(&user)
-	if err != nil {
-		utils.RespondWithError(w, http.StatusBadRequest, "Invalid request payload")
+	user := model.User{
+		Name:     r.URL.Query().Get("name"),
+		Email:    r.URL.Query().Get("email"),
+		Password: r.URL.Query().Get("password"),
+	}
+
+	if user.Name == "" || user.Email == "" || user.Password == "" {
+		utils.RespondWithError(w, http.StatusBadRequest, "Missing required query parameters")
 		return
 	}
 
-	// Hash the password before storing it
 	hashedPassword, err := services.HashPassword(user.Password)
 	if err != nil {
 		utils.RespondWithError(w, http.StatusInternalServerError, "Error hashing password")
@@ -33,7 +36,6 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 
 	utils.RespondWithJSON(w, http.StatusCreated, map[string]string{"message": "User created successfully"})
 }
-
 func Login(w http.ResponseWriter, r *http.Request) {
 	var creds model.Credentials
 	err := json.NewDecoder(r.Body).Decode(&creds)

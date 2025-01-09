@@ -1,9 +1,8 @@
 package routes
 
 import (
-	"github.com/themrgeek/cleaning-service/pkg/controllers"
-
 	"github.com/gorilla/mux"
+	"github.com/themrgeek/cleaning-service/pkg/controllers"
 )
 
 func SetupRouter() *mux.Router {

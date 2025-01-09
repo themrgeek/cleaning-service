@@ -21,10 +21,11 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 type BookingRequest struct {
-	ServiceType string `json:"service_type"`
-	Name        string `json:"name"`
-	Address     string `json:"address"`
-	Email       string `json:"email"`
+	ServiceType   string `json:"service_type"`
+	Name          string `json:"name"`
+	Address       string `json:"address"`
+	Email         string `json:"email"`
+	DateOfBooking string `json:"date_of_booking"`
 }
 
 type OTPRequest struct {

@@ -25,6 +25,13 @@ func BookService(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Store booking details temporarily (e.g., in-memory store or database)
+	err = services.StoreBookingDetails(booking)
+	if err != nil {
+		utils.RespondWithError(w, http.StatusInternalServerError, "Error storing booking details")
+		return
+	}
+
 	// Send OTP via email
 	go services.SendEmail(booking.Email, "OTP for booking", otp)
 
@@ -45,10 +52,24 @@ func VerifyOTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Retrieve booking details
+	booking, err := services.GetBookingDetails(otpRequest.Email)
+	if err != nil {
+		utils.RespondWithError(w, http.StatusInternalServerError, "Error retrieving booking details")
+		return
+	}
+
 	// Allocate cleaner and send email
-	cleaner, err := model.AllocateCleaner(otpRequest)
+	cleaner, err := model.AllocateCleaner(model.OTPRequest{Email: booking.Email})
 	if err != nil {
 		utils.RespondWithError(w, http.StatusInternalServerError, "Error allocating cleaner")
+		return
+	}
+
+	// Store booking details to Booking table
+	err = services.StoreBookingToTable(booking)
+	if err != nil {
+		utils.RespondWithError(w, http.StatusInternalServerError, "Error storing booking to table")
 		return
 	}
 
