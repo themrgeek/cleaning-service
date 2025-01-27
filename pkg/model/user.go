@@ -29,16 +29,6 @@ type BookingRequest struct {
 	DateOfBooking string `json:"date_of_booking"`
 }
 
-type OTPRequest struct {
-	Email string `json:"email"`
-	OTP   string `json:"otp"`
-}
-
-type Appointment struct {
-	ID     int    `json:"id"`
-	Status string `json:"status"`
-}
-
 type Credentials struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -49,7 +39,14 @@ func CreateUser(user *User) error {
 	log.Println("Error", err)
 	return err
 }
-
+func GetUserDetails(userEmail string) (*User, error) {
+	var user User
+	err := config.DB.QueryRow("SELECT id, name, email FROM users WHERE email = ?", userEmail).Scan(&user.ID, &user.Name, &user.Email)
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
 func AuthenticateUser(creds Credentials) (*User, error) {
 	var user User
 	err := config.DB.QueryRow("SELECT id, name, email, password FROM users WHERE email = ?", creds.Email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
@@ -60,21 +57,6 @@ func AuthenticateUser(creds Credentials) (*User, error) {
 		return nil, errors.New("invalid credentials")
 	}
 	return &user, nil
-}
-
-func AllocateCleaner(request OTPRequest) (*Cleaner, error) {
-	var cleaner Cleaner
-	err := config.DB.QueryRow("SELECT id, name, email FROM cleaners WHERE available = 1 ORDER BY proximity LIMIT 1").Scan(&cleaner.ID, &cleaner.Name, &cleaner.Email)
-	if err != nil {
-		return nil, errors.New("no available cleaners found")
-	}
-
-	_, err = config.DB.Exec("UPDATE cleaners SET available = 0 WHERE id = ?", cleaner.ID)
-	if err != nil {
-		return nil, errors.New("error updating cleaner availability")
-	}
-
-	return &cleaner, nil
 }
 
 func DeleteAppointment(appointmentID string) error {

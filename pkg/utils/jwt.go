@@ -24,7 +24,7 @@ func ValidateJWT(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
-			RespondWithError(w, http.StatusUnauthorized, "Missing Authorization Header")
+			RespondWithError(nil, w, http.StatusUnauthorized, "Missing Authorization Header")
 			return
 		}
 
@@ -36,7 +36,7 @@ func ValidateJWT(next http.Handler) http.Handler {
 		})
 
 		if err != nil || !token.Valid {
-			RespondWithError(w, http.StatusUnauthorized, "Invalid token")
+			RespondWithError(nil, w, http.StatusUnauthorized, "Invalid token")
 			return
 		}
 

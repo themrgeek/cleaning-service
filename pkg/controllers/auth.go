@@ -20,20 +20,20 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if user.Name == "" || user.Email == "" || user.Password == "" {
-		utils.RespondWithError(w, http.StatusBadRequest, "Missing required query parameters")
+		utils.RespondWithError(nil, w, http.StatusBadRequest, "Missing required query parameters")
 		return
 	}
 
 	hashedPassword, err := services.HashPassword(user.Password)
 	if err != nil {
-		utils.RespondWithError(w, http.StatusInternalServerError, "Error hashing password")
+		utils.RespondWithError(nil, w, http.StatusInternalServerError, "Error hashing password")
 		return
 	}
 	user.Password = hashedPassword
 
 	err = model.CreateUser(&user)
 	if err != nil {
-		utils.RespondWithError(w, http.StatusInternalServerError, "Error creating user")
+		utils.RespondWithError(nil, w, http.StatusInternalServerError, "Error creating user")
 		return
 	}
 
@@ -48,20 +48,20 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("creds: %v", creds)
 	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil && err != io.EOF {
-		utils.RespondWithError(w, http.StatusBadRequest, "Invalid request payload")
+		utils.RespondWithError(nil, w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
 
 	user, err := model.AuthenticateUser(creds)
 	log.Println("Error", err)
 	if err != nil {
-		utils.RespondWithError(w, http.StatusUnauthorized, "Invalid credentials")
+		utils.RespondWithError(nil, w, http.StatusUnauthorized, "Invalid credentials")
 		return
 	}
 
 	token, err := services.GenerateJWT(user)
 	if err != nil {
-		utils.RespondWithError(w, http.StatusInternalServerError, "Error generating token")
+		utils.RespondWithError(nil, w, http.StatusInternalServerError, "Error generating token")
 		return
 	}
 
