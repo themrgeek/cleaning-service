@@ -13,6 +13,8 @@ type Booking struct {
 	Date        string    `json:"date" db:"date" binding:"required"`
 	ServiceType string    `json:"service_type" db:"service_type" binding:"required"`
 	CreatedAt   time.Time `json:"created_at" db:"created_at"`
+	Details     string    `json:"details"`
+	Review      string    `json:"review"`
 }
 
 var DB *sqlx.DB

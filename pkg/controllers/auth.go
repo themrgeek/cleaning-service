@@ -59,12 +59,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := services.GenerateJWT(user)
+	Token, err := services.GenerateJWT(user)
 	if err != nil {
 		utils.RespondWithError(nil, w, http.StatusInternalServerError, "Error generating token")
 		return
 	}
 
-	utils.RespondWithJSON(w, http.StatusOK, map[string]string{"token": token})
+	utils.RespondWithJSON(w, http.StatusOK, map[string]string{"token": Token})
 
 }

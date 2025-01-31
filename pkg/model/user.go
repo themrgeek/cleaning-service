@@ -47,6 +47,14 @@ func GetUserDetails(userEmail string) (*User, error) {
 	}
 	return &user, nil
 }
+
+func GetUserBookings(email string) ([]*Booking, error) {
+	// Simulating fetching bookings from database
+	return []*Booking{
+		{ID: 1, Details: "Booking 1 details", Review: "Review for booking 1"},
+		{ID: 2, Details: "Booking 2 details", Review: "Review for booking 2"},
+	}, nil
+}
 func AuthenticateUser(creds Credentials) (*User, error) {
 	var user User
 	err := config.DB.QueryRow("SELECT id, name, email, password FROM users WHERE email = ?", creds.Email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
@@ -57,23 +65,4 @@ func AuthenticateUser(creds Credentials) (*User, error) {
 		return nil, errors.New("invalid credentials")
 	}
 	return &user, nil
-}
-
-func DeleteAppointment(appointmentID string) error {
-	var status string
-	err := config.DB.QueryRow("SELECT status FROM appointments WHERE id = ?", appointmentID).Scan(&status)
-	if err != nil {
-		return errors.New("appointment not found")
-	}
-
-	if status != "pending" {
-		return errors.New("appointment cannot be deleted as it is already in processing")
-	}
-
-	_, err = config.DB.Exec("DELETE FROM appointments WHERE id = ?", appointmentID)
-	if err != nil {
-		return errors.New("error deleting appointment")
-	}
-
-	return nil
 }
