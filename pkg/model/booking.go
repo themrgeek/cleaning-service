@@ -1,35 +1,60 @@
 package model
 
 import (
+	"fmt"
 	"log"
-	"time"
+	"os"
 
 	"github.com/jmoiron/sqlx"
 )
 
-type Booking struct {
-	ID          uint      `json:"id" db:"id" gorm:"primaryKey"`
-	Address     string    `json:"address" db:"address" binding:"required"`
-	Date        string    `json:"date" db:"date" binding:"required"`
-	ServiceType string    `json:"service_type" db:"service_type" binding:"required"`
-	CreatedAt   time.Time `json:"created_at" db:"created_at"`
-	Details     string    `json:"details"`
-	Review      string    `json:"review"`
+type BookingPayload struct {
+	Address     string `json:"address"`
+	ServiceType string `json:"service_type"`
+}
+type BookingServiceStatus struct {
+	StatusOfBooking string `json:"status"`
+	IsCanceled      bool   `json:"is_canceled"`
 }
 
-var DB *sqlx.DB
-
-func CreateBooking(booking *Booking) error {
-	query := "INSERT INTO Booking (Address, Date, ServiceType, CreatedAt) VALUES (?, DATE('now'), ?,NOW())"
-	_, err := DB.Exec(query, booking.Address, booking.Date, time.Now())
+func InitDB(dataSourceName string) error {
+	var err error
+	DB, err = sqlx.Connect("mysql", dataSourceName)
 	if err != nil {
-		log.Println("Error creating booking:", err)
 		return err
 	}
 	return nil
 }
+
+// ALTER TABLE bookings
+// ADD COLUMN status VARCHAR(255),
+// ADD COLUMN is_canceled BOOLEAN DEFAULT false;
+var DB *sqlx.DB
+
+func Init() {
+	if err := InitDB(os.Getenv("DB_DSN")); err != nil {
+		log.Fatal("Failed to initialize database:", err)
+	}
+}
+
+func CreateBooking(booking *BookingPayload) {
+	address := booking.Address
+	serviceType := booking.ServiceType
+	fmt.Println(address, serviceType)
+	query := "INSERT INTO bookings (address, service_type,status,is_canceled) VALUES (?, ?, 'pending', true)"
+	Init()
+	fmt.Println("Database initialized...")
+	fmt.Println(query)
+	_, err := DB.Exec(query, address, serviceType, "pending", true)
+	if err != nil {
+		log.Println("Error creating booking:", err)
+	} else {
+		log.Println("Booking created successfully")
+	}
+}
+
 func DeleteBooking(id uint) error {
-	query := "DELETE FROM bookings WHERE id = ?"
+	query := "DELETE FROM bookings WHERE booking_id = ?"
 	_, err := DB.Exec(query, id)
 	if err != nil {
 		log.Println("Error deleting booking:", err)

@@ -21,14 +21,6 @@ func CheckPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
-type BookingRequest struct {
-	ServiceType   string `json:"service_type"`
-	Name          string `json:"name"`
-	Address       string `json:"address"`
-	Email         string `json:"email"`
-	DateOfBooking string `json:"date_of_booking"`
-}
-
 type Credentials struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -48,13 +40,6 @@ func GetUserDetails(userEmail string) (*User, error) {
 	return &user, nil
 }
 
-func GetUserBookings(email string) ([]*Booking, error) {
-	// Simulating fetching bookings from database
-	return []*Booking{
-		{ID: 1, Details: "Booking 1 details", Review: "Review for booking 1"},
-		{ID: 2, Details: "Booking 2 details", Review: "Review for booking 2"},
-	}, nil
-}
 func AuthenticateUser(creds Credentials) (*User, error) {
 	var user User
 	err := config.DB.QueryRow("SELECT id, name, email, password FROM users WHERE email = ?", creds.Email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)

@@ -14,5 +14,6 @@ func SetupRouter() *mux.Router {
 	userRoutes := r.PathPrefix("/user").Subrouter()
 
 	userRoutes.HandleFunc("/profile", controllers.Profile).Methods("GET")
+	userRoutes.HandleFunc("/bookings", controllers.CreateBooking).Methods("POST")
 	return r
 }

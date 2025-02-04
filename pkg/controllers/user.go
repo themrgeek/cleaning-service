@@ -13,7 +13,7 @@ import (
 func Profile(w http.ResponseWriter, r *http.Request) {
 	authHeader := r.Header.Get("Authorization")
 	if authHeader == "" {
-		utils.RespondWithError(nil, w, http.StatusUnauthorized, "Authorization header is missing")
+		utils.RespondWithError(w, http.StatusUnauthorized, "Authorization header is missing")
 		return
 	}
 
@@ -25,25 +25,19 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 	})
 
 	if err != nil || !token.Valid {
-		utils.RespondWithError(nil, w, http.StatusUnauthorized, "Invalid token")
+		utils.RespondWithError(w, http.StatusUnauthorized, "Invalid token")
 		return
 	}
 
 	userEmail := claims.Email
 	user, err := model.GetUserDetails(userEmail)
 	if err != nil {
-		utils.RespondWithError(nil, w, http.StatusInternalServerError, "Error fetching user details")
+		utils.RespondWithError(w, http.StatusInternalServerError, "Error fetching user details")
 		return
 	}
 
 	if user == nil {
-		utils.RespondWithError(nil, w, http.StatusNotFound, "User not found")
-		return
-	}
-
-	bookings, err := model.GetUserBookings(userEmail)
-	if err != nil {
-		utils.RespondWithError(nil, w, http.StatusInternalServerError, "Error fetching bookings")
+		utils.RespondWithError(w, http.StatusNotFound, "User not found")
 		return
 	}
 
@@ -56,11 +50,10 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusAccepted)
 	userProfile := struct {
-		User     *model.User      `json:"user"`
-		Bookings []*model.Booking `json:"bookings"`
+		User *model.User `json:"user"`
+		// Bookings []*model.Booking `json:"bookings"`
 	}{
-		User:     user,
-		Bookings: bookings,
+		User: user,
 	}
 
 	utils.RespondWithJSON(w, http.StatusAccepted, userProfile)
