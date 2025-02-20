@@ -29,22 +29,20 @@ func CreateBooking(w http.ResponseWriter, r *http.Request) {
 	// Extract and sanitize input parameters
 	address := utils.SanitizeString(r.URL.Query().Get("address"))
 	serviceType := utils.SanitizeString(r.URL.Query().Get("service_type"))
-	// Validate required parameters
-	if address == "" || serviceType == "" {
-		utils.RespondWithError(w, http.StatusBadRequest, "Both 'address' and 'service_type' parameters are required")
-		return
-	}
-
-	// Validate service type
-	if !utils.IsValidServiceType(serviceType) {
-		utils.RespondWithError(w, http.StatusBadRequest, "Invalid service type")
-		return
-	}
+	carType := utils.SanitizeString(r.URL.Query().Get("car_type"))
+	dateOfBooking := utils.SanitizeString(r.URL.Query().Get("date_of_booking"))
+	// // Validate required parameters
+	// if address == "" || serviceType == "" || carType == "" || dateOfBooking == "" {
+	// 	utils.RespondWithError(w, http.StatusBadRequest, "Missing required parameters...")
+	// 	return
+	// }
 
 	// Create booking payload
 	booking := model.BookingPayload{
-		Address:     address,
-		ServiceType: serviceType,
+		Address:       address,
+		ServiceType:   serviceType,
+		CarType:       carType,
+		DateOfBooking: dateOfBooking,
 	}
 
 	// Create database record

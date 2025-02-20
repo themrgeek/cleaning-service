@@ -32,23 +32,6 @@ func SanitizeString(input string) string {
 
 }
 
-// IsValidServiceType checks if the provided service type is valid
-
-func IsValidServiceType(serviceType string) bool {
-
-	validTypes := []string{"home cleaning", "cleaning home", "clean at home", "clean at store", "store cleaning", "cleaning store", "Home Cleaning"}
-
-	serviceTypeLower := strings.ToLower(serviceType)
-	for _, t := range validTypes {
-		if strings.ToLower(t) == serviceTypeLower {
-			return true
-		}
-	}
-
-	return false
-
-}
-
 func RespondWithError(w http.ResponseWriter, code int, message string) {
 
 	RespondWithJSON(w, code, map[string]string{"error": message})

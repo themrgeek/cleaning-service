@@ -9,8 +9,10 @@ import (
 )
 
 type BookingPayload struct {
-	Address     string `json:"address"`
-	ServiceType string `json:"service_type"`
+	Address       string `json:"address"`
+	ServiceType   string `json:"service_type"`
+	CarType       string `json:"car_type"`
+	DateOfBooking string `json:"date_of_booking"`
 }
 type BookingServiceStatus struct {
 	StatusOfBooking string `json:"status"`
@@ -38,14 +40,16 @@ func Init() {
 }
 
 func CreateBooking(booking *BookingPayload) {
-	address := booking.Address
-	serviceType := booking.ServiceType
-	fmt.Println(address, serviceType)
-	query := "INSERT INTO bookings (address, service_type,status,is_canceled) VALUES (?, ?, 'pending', true)"
+	Address := booking.Address
+	ServiceType := booking.ServiceType
+	CarType := booking.CarType
+	BookingDate := booking.DateOfBooking
+	fmt.Println(Address, ServiceType)
+	query := "INSERT INTO bookings (address, service_type,car_type,date_of_booking,status,is_canceled) VALUES (?, ?, ?, ?, ?,?)"
 	Init()
 	fmt.Println("Database initialized...")
 	fmt.Println(query)
-	_, err := DB.Exec(query, address, serviceType, "pending", true)
+	_, err := DB.Exec(query, Address, ServiceType, CarType, BookingDate, "pending", true)
 	if err != nil {
 		log.Println("Error creating booking:", err)
 	} else {
